@@ -342,7 +342,7 @@ export default function Footer() {
 
 
                         <h2 className="text-4xl md:text-6xl lg:text-7xl font-medium tracking-tight leading-[1.1]">
-                            Let's connect and chat about{' '}
+                            Let&apos;s connect and chat about{' '}
                             <span className="font-serif italic font-light">design & product</span>
                         </h2>
                     </div>

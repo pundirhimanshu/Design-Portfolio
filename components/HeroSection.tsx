@@ -76,7 +76,7 @@ export default function HeroSection() {
                                 whileHover={{ scale: 1.1, y: -10 }}
                                 transition={{ type: "spring", stiffness: 400 }}
                             >
-                                I'm
+                                I&apos;m
                             </motion.span>{" "}
                             <motion.span
                                 className="inline-block"
