@@ -114,12 +114,24 @@ export default function Navigation() {
 
     const handleScrollTo = (id: string) => {
         setIsMenuOpen(false);
-        const element = document.getElementById(id);
-        element?.scrollIntoView({ behavior: 'smooth' });
+        // Small timeout to allow menu close animation to start/layout to stabilize
+        setTimeout(() => {
+            const element = document.getElementById(id);
+            if (element) {
+                const headerOffset = 80;
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        }, 100);
     };
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 pt-6 px-4 md:px-8 max-w-7xl mx-auto pointer-events-none">
+        <nav className="fixed top-0 left-0 right-0 z-[60] pt-6 px-4 md:px-8 max-w-7xl mx-auto pointer-events-none">
             <motion.div
                 style={{
                     backgroundColor: navBgColor,
@@ -253,7 +265,7 @@ export default function Navigation() {
                                             }
                                         }}
                                         style={{ color: textColor }}
-                                        className="text-2xl font-bold tracking-tight py-2"
+                                        className="text-2xl font-bold tracking-tight py-2 block w-full"
                                     >
                                         {item}
                                     </motion.a>
