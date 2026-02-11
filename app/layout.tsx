@@ -4,6 +4,20 @@ import "./globals.css";
 export const metadata: Metadata = {
     title: "Design Portfolio",
     description: "A stunning design portfolio showcasing creative work",
+    icons: {
+        icon: [
+            {
+                url: '/images/Fire.gif?v=4',
+                type: 'image/gif',
+            },
+        ],
+        shortcut: [
+            {
+                url: '/images/Fire.gif?v=4',
+                type: 'image/gif',
+            },
+        ],
+    },
 };
 
 import CustomCursor from "@/components/CustomCursor";
