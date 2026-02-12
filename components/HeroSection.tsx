@@ -45,10 +45,10 @@ export default function HeroSection() {
                     />
                 </div>
 
-                {/* Front Layer of Net (Clipped to just show front rim/top) */}
+                {/* Front Layer of Net (Layered for "Inside" effect) */}
                 <div
                     className="absolute inset-0 z-20 pointer-events-none"
-                    style={{ clipPath: 'inset(0 0 60% 0)' }} // Shows only the top 40% (the rim area)
+                    style={{ clipPath: 'inset(0 0 15% 0)' }} // Shows the top 85% (rim and most of the net)
                 >
                     <Image
                         src="/images/Net.png"

@@ -23,6 +23,8 @@ export default function Basketball({ containerRef, netRef, onSwish }: Basketball
     const requestRef = useRef<number>();
     const lastCelebration = useRef<number>(0);
     const [isGoal, setIsGoal] = useState(false);
+    const [isMiss, setIsMiss] = useState(false);
+    const hasDetectedEnd = useRef(false);
 
     const ballSize = 320;
     const bounce = 0.8;
@@ -49,6 +51,11 @@ export default function Basketball({ containerRef, netRef, onSwish }: Basketball
         setTimeout(() => cheer.play().catch(e => { }), 100);
     };
 
+    const playMiss = () => {
+        setIsMiss(true);
+        setTimeout(() => setIsMiss(false), 2000);
+    };
+
     const update = () => {
         if (!isDragging.current && containerRef.current) {
             const container = containerRef.current.getBoundingClientRect();
@@ -69,10 +76,17 @@ export default function Basketball({ containerRef, netRef, onSwish }: Basketball
             currentX += velX;
             currentY += velY;
 
-            // Boundaries
+            // Boundaries & Miss Detection
             if (currentY >= container.height - ballSize) {
                 currentY = container.height - ballSize;
                 velY = -Math.abs(velY) * bounce;
+
+                // If it hit the floor and wasn't a goal, and had significant downward velocity
+                if (!hasDetectedEnd.current && Math.abs(velocity.current.y) > 2) {
+                    playMiss();
+                    hasDetectedEnd.current = true;
+                }
+
                 // Add some squash on impact
                 scaleY.set(0.8);
                 scaleX.set(1.2);
@@ -106,35 +120,50 @@ export default function Basketball({ containerRef, netRef, onSwish }: Basketball
                 const leftRimX = netX + 40;
                 const rightRimX = netX + netRect.width - 40;
 
-                // Bottom of the ball hitting the rim
-                const ballBottomY = currentY + ballSize;
-
-                // If ball hits left rim
-                if (Math.abs(ballCenterX - leftRimX) < 40 && Math.abs(currentY + ballSize - rimY) < 30) {
-                    velY = -Math.abs(velY) * 0.6;
-                    velX = -Math.abs(velX) * 0.8;
+                // If ball hits left rim (Side Collision - "thrown away")
+                if (Math.abs(ballCenterX - leftRimX) < 50 && Math.abs(currentY + ballSize - rimY) < 40) {
+                    velY = -Math.abs(velY) * 0.7;
+                    velX = -Math.abs(velX + 8) * 1.6; // Forceful throw back
+                    if (!hasDetectedEnd.current) {
+                        playMiss();
+                        hasDetectedEnd.current = true;
+                    }
                 }
-                // If ball hits right rim
-                if (Math.abs(ballCenterX - rightRimX) < 40 && Math.abs(currentY + ballSize - rimY) < 30) {
-                    velY = -Math.abs(velY) * 0.6;
-                    velX = Math.abs(velX) * 0.8;
+                // If ball hits right rim (Side Collision - "thrown away")
+                if (Math.abs(ballCenterX - rightRimX) < 50 && Math.abs(currentY + ballSize - rimY) < 40) {
+                    velY = -Math.abs(velY) * 0.7;
+                    velX = Math.abs(velX + 8) * 1.6; // Forceful throw back
+                    if (!hasDetectedEnd.current) {
+                        playMiss();
+                        hasDetectedEnd.current = true;
+                    }
                 }
 
                 // Swish Detection (Center area)
-                const withinX = ballCenterX > netX + 60 && ballCenterX < netX + netRect.width - 60;
-                const withinY = ballCenterY > netY && ballCenterY < netY + 150;
+                const withinX = ballCenterX > netX + 45 && ballCenterX < netX + netRect.width - 45;
+                const withinY = ballCenterY > netY - 50 && ballCenterY < netY + netRect.height;
 
                 if (withinX && withinY) {
                     ballZIndex.set(15);
-                    // Net resistance: slow down the ball as it passes through
-                    velX *= 0.95;
-                    velY *= 0.95;
+                    // Scale down slightly when inside the net
+                    scaleX.set(0.85);
+                    scaleY.set(0.95);
 
-                    if (Math.abs(velY) > 0.5 && !isGoal) {
+                    // Net resistance
+                    velX *= 0.96;
+                    velY *= 0.96;
+
+                    // Goal only if falling from top side (positive velY)
+                    if (velY > 1.5 && !isGoal && !hasDetectedEnd.current) {
+                        hasDetectedEnd.current = true;
                         playCelebration();
                     }
                 } else {
                     ballZIndex.set(50);
+                    if (!isDragging.current) {
+                        scaleX.set(1);
+                        scaleY.set(1);
+                    }
                 }
             }
 
@@ -171,6 +200,7 @@ export default function Basketball({ containerRef, netRef, onSwish }: Basketball
                 dragMomentum={false}
                 onDragStart={() => {
                     isDragging.current = true;
+                    hasDetectedEnd.current = false;
                     ballZIndex.set(50);
                     scaleX.set(1.05);
                     scaleY.set(1.05);
@@ -231,7 +261,7 @@ export default function Basketball({ containerRef, netRef, onSwish }: Basketball
                         className="absolute left-1/2 top-1/2 -translate-x-1/2 pointer-events-none z-[100] flex flex-col items-center"
                     >
                         <h2 className="text-7xl md:text-9xl font-black text-orange-500 italic drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)]">
-                            SWISH!
+                            SMASH!
                         </h2>
                         <motion.div
                             initial={{ opacity: 0 }}
@@ -239,6 +269,31 @@ export default function Basketball({ containerRef, netRef, onSwish }: Basketball
                             className="text-4xl mt-4"
                         >
                             🏀🔥💎
+                        </motion.div>
+                    </motion.div>
+                )}
+
+                {isMiss && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.5, y: 0 }}
+                        animate={{
+                            opacity: [0, 1, 1, 0],
+                            scale: [0.5, 1.2, 1],
+                            y: -100
+                        }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 1.5, times: [0, 0.2, 0.8, 1] }}
+                        className="absolute left-1/2 top-1/2 -translate-x-1/2 pointer-events-none z-[100] flex flex-col items-center"
+                    >
+                        <h2 className="text-7xl md:text-9xl font-black text-gray-400 italic drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)]">
+                            Try again
+                        </h2>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="text-4xl mt-4"
+                        >
+                            😅🏀💨
                         </motion.div>
                     </motion.div>
                 )}
