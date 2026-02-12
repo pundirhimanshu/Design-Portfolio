@@ -7,6 +7,7 @@ import SpaceButton from './SpaceButton';
 const projects = [
     {
         id: "01",
+        emoji: "✨",
         title: "Design an in-app campaign for Zomato centered around the nine days of Navratri.",
         image: "/images/Project 1.png",
         color: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
@@ -14,6 +15,7 @@ const projects = [
     },
     {
         id: "02",
+        emoji: "🚀",
         title: "Crafted in-app campaign experiences for Zomato, EazyDiner, and Paytm.",
         image: "/images/Project 2.png",
         color: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)",
@@ -24,12 +26,7 @@ const projects = [
 export default function WorkSection() {
     return (
         <section id="work" className="py-10 md:py-20 bg-white relative overflow-hidden">
-            {/* Background Text Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none">
-                <h2 className="text-[20vw] font-black uppercase tracking-tighter leading-none text-black">
-                    CASE<br />STUDY
-                </h2>
-            </div>
+
 
             <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
                 {/* Section Header */}
@@ -56,8 +53,8 @@ export default function WorkSection() {
                                 transition={{ duration: 0.8 }}
                                 className="flex-1 max-w-md text-center md:text-left"
                             >
-                                <span className="text-4xl md:text-6xl font-black text-black mb-4 block">
-                                    #{project.id}
+                                <span className="text-4xl md:text-6xl font-black text-black mb-4 flex items-center gap-3">
+                                    {project.id} <span className="text-2xl md:text-4xl">{project.emoji}</span>
                                 </span>
                                 <h3 className="font-handwriting text-3xl md:text-5xl text-gray-500 mb-8 leading-relaxed font-normal">
                                     {project.title}

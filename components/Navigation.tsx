@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 
 export default function Navigation() {
-    const [time, setTime] = useState("");
-    const [timeGreeting, setTimeGreeting] = useState("");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const { scrollYProgress } = useScroll();
@@ -13,31 +11,58 @@ export default function Navigation() {
     // Sync navbar colors with same transition timing as TransitionBridge
     const navBgColor = useTransform(
         scrollYProgress,
-        [0, 0.15, 0.35, 0.65, 0.85, 1],
-        ["rgba(255, 255, 255, 0.7)", "rgba(255, 255, 255, 0.7)", "rgba(0, 0, 0, 0.7)", "rgba(0, 0, 0, 0.7)", "rgba(255, 255, 255, 0.7)", "rgba(255, 255, 255, 0.7)"]
+        [0, 0.2, 0.4, 0.7, 0.9, 1],
+        [
+            "rgba(255, 255, 255, 0.85)",
+            "rgba(255, 255, 255, 0.85)",
+            "rgba(10, 10, 10, 0.85)",
+            "rgba(10, 10, 10, 0.85)",
+            "rgba(255, 255, 255, 0.85)",
+            "rgba(255, 255, 255, 0.85)"
+        ]
     );
 
     const textColor = useTransform(
         scrollYProgress,
-        [0, 0.15, 0.35, 0.65, 0.85, 1],
+        [0, 0.2, 0.4, 0.7, 0.9, 1],
         ["#000000", "#000000", "#ffffff", "#ffffff", "#000000", "#000000"]
     );
 
     const borderColor = useTransform(
         scrollYProgress,
-        [0, 0.15, 0.35, 0.65, 0.85, 1],
-        ["rgba(255, 255, 255, 0.1)", "rgba(255, 255, 255, 0.1)", "rgba(255, 255, 255, 0.1)", "rgba(255, 255, 255, 0.1)", "rgba(255, 255, 255, 0.4)", "rgba(255, 255, 255, 0.4)"]
+        [0, 0.2, 0.4, 0.7, 0.9, 1],
+        [
+            "rgba(0, 0, 0, 0.08)",
+            "rgba(0, 0, 0, 0.08)",
+            "rgba(255, 255, 255, 0.15)",
+            "rgba(255, 255, 255, 0.15)",
+            "rgba(0, 0, 0, 0.08)",
+            "rgba(0, 0, 0, 0.08)"
+        ]
+    );
+
+    const navShadow = useTransform(
+        scrollYProgress,
+        [0, 0.2, 0.4, 0.7, 0.9, 1],
+        [
+            "0 4px 20px -2px rgba(0,0,0,0.05)",
+            "0 4px 20px -2px rgba(0,0,0,0.05)",
+            "0 4px 30px -2px rgba(0,0,0,0.3)",
+            "0 4px 30px -2px rgba(0,0,0,0.3)",
+            "0 15px 40px -10px rgba(0,0,0,0.1)",
+            "0 15px 40px -10px rgba(0,0,0,0.15)"
+        ]
     );
 
     const buttonBg = useTransform(
         scrollYProgress,
-        [0, 0.15, 0.35, 0.65, 0.85, 1],
+        [0, 0.2, 0.4, 0.7, 0.9, 1],
         ["#000000", "#000000", "#ffffff", "#ffffff", "#000000", "#000000"]
     );
 
     const buttonText = useTransform(
         scrollYProgress,
-        [0, 0.15, 0.35, 0.65, 0.85, 1],
+        [0, 0.2, 0.4, 0.7, 0.9, 1],
         ["#ffffff", "#ffffff", "#000000", "#000000", "#ffffff", "#ffffff"]
     );
 
@@ -52,65 +77,6 @@ export default function Navigation() {
     }, []);
 
     const navWidth = useTransform(scrollYProgress, [0, 0.05], ["100%", "90%"]);
-
-    const [currentStyleIndex, setCurrentStyleIndex] = useState(0);
-    const [isHoveringButton, setIsHoveringButton] = useState(false);
-
-    const buttonStyles = [
-        {
-            label: "CONTACT_NOW",
-            className: "bg-black text-[#00ff00] border border-[#00ff00] font-mono tracking-widest text-[10px]",
-            style: {}
-        },
-        {
-            label: "START_MAIL",
-            className: "bg-[#ffd700] text-black border-2 border-black font-black uppercase shadow-[3px_3px_0px_#000] text-[10px]",
-            style: {}
-        },
-        {
-            label: "Send Mail...",
-            className: "bg-[#c0c0c0] text-blue-900 border-2 border-t-white border-l-white border-r-[#808080] border-b-[#808080] font-serif italic text-xs",
-            style: { borderStyle: 'outset' }
-        },
-        {
-            label: "CONTACT.EXE",
-            className: "bg-[#2b002b] text-[#ff00ff] border border-[#ff00ff] font-bold shadow-[0_0_10px_#ff00ff] text-[10px] tracking-wide",
-            style: { textShadow: '2px 0 #00ffff, -2px 0 #ff0000' }
-        }
-    ];
-
-    useEffect(() => {
-        let interval: NodeJS.Timeout;
-        if (isHoveringButton) {
-            interval = setInterval(() => {
-                setCurrentStyleIndex((prev) => (prev + 1) % buttonStyles.length);
-            }, 400); // Fast cycle for a more intense, flicker-free glitch effect
-        } else {
-            setCurrentStyleIndex(0); // Reset to default when not hovering
-        }
-        return () => clearInterval(interval);
-    }, [isHoveringButton]);
-
-    useEffect(() => {
-        const updateTime = () => {
-            const now = new Date();
-            const hour = now.getHours();
-            if (hour < 12) setTimeGreeting("Good Morning");
-            else if (hour < 17) setTimeGreeting("Good Afternoon");
-            else setTimeGreeting("Good Evening");
-
-            const timeString = now.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-            });
-            setTime(`${timeString} IST`);
-        };
-
-        updateTime();
-        const timer = setInterval(updateTime, 1000);
-        return () => clearInterval(timer);
-    }, []);
 
     const handleScrollTo = (id: string) => {
         setIsMenuOpen(false);
@@ -136,6 +102,7 @@ export default function Navigation() {
                 style={{
                     backgroundColor: navBgColor,
                     borderColor: borderColor,
+                    boxShadow: navShadow,
                     width: navWidth
                 }}
                 className={`backdrop-blur-md border rounded-3xl md:rounded-full shadow-lg px-6 py-3 pointer-events-auto transition-all duration-300 mx-auto ${isMenuOpen ? 'rounded-[2rem]' : ''}`}
@@ -165,9 +132,6 @@ export default function Navigation() {
                                 </motion.a>
                             </AnimatePresence>
                         </div>
-                        <motion.span style={{ color: textColor }} className="text-[10px] md:text-xs opacity-70 flex items-center gap-1 sm:gap-2" suppressHydrationWarning>
-                            {time || "00:00 IST"} <span className="opacity-50">|</span> {timeGreeting}
-                        </motion.span>
                     </div>
 
                     {/* Center - Menu Links (Desktop) */}
@@ -191,28 +155,18 @@ export default function Navigation() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div
-                            className="hidden md:block w-[140px] h-10 relative flex items-center justify-center"
-                            onMouseEnter={() => {
-                                setIsHoveringButton(true);
-                                setCurrentStyleIndex((prev) => (prev + 1) % buttonStyles.length);
-                            }}
-                            onMouseLeave={() => setIsHoveringButton(false)}
-                        >
+                        <div className="hidden md:block w-fit">
                             <motion.a
-                                key={isHoveringButton ? currentStyleIndex : 'default'}
                                 href="mailto:himanshupundir506@gmail.com"
-                                animate={{ opacity: 1, scale: 1 }}
-                                style={!isHoveringButton ? { backgroundColor: buttonBg, color: buttonText } : buttonStyles[currentStyleIndex].style}
-                                className={`
-                                    absolute inset-0 flex items-center justify-center transition-all duration-200 cursor-pointer
-                                    ${!isHoveringButton
-                                        ? "px-6 py-2 text-sm rounded-full font-medium"
-                                        : `rounded-none ${buttonStyles[currentStyleIndex].className}`
-                                    }
-                                `}
+                                style={{
+                                    backgroundColor: buttonBg,
+                                    color: buttonText
+                                }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-6 py-2 text-sm rounded-full font-medium flex items-center justify-center transition-all duration-200 cursor-pointer whitespace-nowrap"
                             >
-                                {isHoveringButton ? buttonStyles[currentStyleIndex].label : "Get in Touch"}
+                                Get in Touch
                             </motion.a>
                         </div>
 
@@ -270,27 +224,16 @@ export default function Navigation() {
                                         {item}
                                     </motion.a>
                                 ))}
-                                <div
-                                    className="mt-4 w-full h-16 relative flex items-center justify-center"
-                                    onMouseEnter={() => {
-                                        setIsHoveringButton(true);
-                                        setCurrentStyleIndex((prev) => (prev + 1) % buttonStyles.length);
-                                    }}
-                                    onMouseLeave={() => setIsHoveringButton(false)}
-                                >
+                                <div className="mt-4 w-full">
                                     <motion.a
-                                        key={isHoveringButton ? currentStyleIndex : 'mobile-default'}
                                         href="mailto:himanshupundir506@gmail.com"
-                                        style={!isHoveringButton ? { backgroundColor: buttonBg, color: buttonText } : buttonStyles[currentStyleIndex].style}
-                                        className={`
-                                            absolute inset-0 flex items-center justify-center transition-none cursor-pointer
-                                            ${!isHoveringButton
-                                                ? "px-6 py-4 rounded-2xl font-bold text-lg"
-                                                : `rounded-none ${buttonStyles[currentStyleIndex].className} text-xl`
-                                            }
-                                        `}
+                                        style={{
+                                            backgroundColor: buttonBg,
+                                            color: buttonText
+                                        }}
+                                        className="px-6 py-4 rounded-2xl font-bold text-lg flex items-center justify-center cursor-pointer"
                                     >
-                                        {isHoveringButton ? buttonStyles[currentStyleIndex].label : "Get in Touch"}
+                                        Get in Touch
                                     </motion.a>
                                 </div>
                             </div>

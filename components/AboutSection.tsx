@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import HangingDecoration from './HangingDecoration';
 
 const initialImages = [
     { id: 1, src: '/images/at-home.jpg', alt: 'At home', rotate: 2, caption: 'At home' },
@@ -139,13 +140,8 @@ export default function AboutSection() {
                         <p className="font-handwriting text-4xl md:text-6xl text-rose-500 -mb-2 md:-mb-4 rotate-[-6deg] z-10">Enjoy</p>
                         <p className="text-4xl md:text-6xl font-black text-black tracking-tight uppercase">EVERY MOMENT</p>
                     </div>
-                    <div className="relative w-full h-40 md:h-96">
-                        <Image
-                            src="/images/Deco.avif"
-                            alt="Decoration"
-                            fill
-                            className="object-contain"
-                        />
+                    <div className="relative w-full h-[180px] md:h-[320px]">
+                        <HangingDecoration />
                     </div>
                 </motion.div>
 

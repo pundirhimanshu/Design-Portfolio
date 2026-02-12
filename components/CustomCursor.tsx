@@ -81,18 +81,6 @@ export default function CustomCursor() {
                     />
                 </svg>
 
-                {/* 'You' Label Container */}
-                <motion.div
-                    className="absolute left-3 top-3 px-2 py-1 rounded-md text-white text-xs font-bold shadow-sm"
-                    style={{
-                        backgroundColor: cursorColor,
-                    }}
-                    animate={{
-                        scale: isHovering ? 1.1 : 1,
-                    }}
-                >
-                    You
-                </motion.div>
             </div>
         </motion.div>
     );
