@@ -131,7 +131,7 @@ export default function Footer() {
 
                         {/* Copyright */}
                         <div className="text-left text-sm md:text-base text-gray-400 font-light tracking-wide mt-8">
-                            © 2025 Himanshu. All right reserved.
+
                         </div>
                     </div>
                 </div>
