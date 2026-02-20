@@ -3,6 +3,7 @@ import AboutSection from '@/components/AboutSection';
 import ReflectionsSection from '@/components/ReflectionsSection';
 import CloudSection from '@/components/CloudSection';
 import WorkSection from '@/components/WorkSection';
+import GamesSection from '@/components/GamesSection';
 import Footer from '@/components/Footer';
 import Navigation from '@/components/Navigation';
 import TransitionBridge from '@/components/TransitionBridge';
@@ -21,6 +22,7 @@ export default function Home() {
                 <CloudSection />
             </TransitionBridge>
             <WorkSection />
+            <GamesSection />
             <Footer />
             <MusicPlayer />
         </main>
