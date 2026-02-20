@@ -11,7 +11,8 @@ const projects = [
         title: "Design an in-app campaign for Zomato centered around the nine days of Navratri.",
         image: "/images/Project 1.png",
         color: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-        bgColor: "#006437" // Dark green for button
+        bgColor: "#006437", // Dark green for button
+        url: "#"
     },
     {
         id: "02",
@@ -19,7 +20,8 @@ const projects = [
         title: "Crafted in-app campaign experiences for Zomato, EazyDiner, and Paytm.",
         image: "/images/Project 2.png",
         color: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)",
-        bgColor: "#006437"
+        bgColor: "#006437",
+        url: "https://www.figma.com/proto/94ugGfjQETZ7QGi9GsXXrw/In-app-Campaigns?page-id=0%3A1&node-id=0-6&viewport=679%2C50%2C0.07&t=hIiIqgIYPPKd7oPX-1&scaling=contain&content-scaling=fixed"
     }
 ];
 
@@ -60,7 +62,7 @@ export default function WorkSection() {
                                     {project.title}
                                 </h3>
                                 <div className="mt-8">
-                                    <SpaceButton />
+                                    <SpaceButton href={project.url} />
                                 </div>
                             </motion.div>
 

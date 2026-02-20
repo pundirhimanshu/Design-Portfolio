@@ -115,51 +115,60 @@ export default function Basketball({ containerRef, netRef, onSwish }: Basketball
                 const ballCenterX = currentX + ballSize / 2;
                 const ballCenterY = currentY + ballSize / 2;
 
-                // Rim Collision Logic (The top edge of the hoop)
-                const rimY = netY + 20;
+                // Define the hoop opening (the center top area of the net)
+                const hoopLeft = netX + 60;
+                const hoopRight = netX + netRect.width - 60;
+                const hoopTop = netY + 10;
+                const hoopBottom = netY + netRect.height * 0.5;
+
+                // Define the full rim edges
+                const rimY = netY + 30;
                 const leftRimX = netX + 40;
                 const rightRimX = netX + netRect.width - 40;
 
-                // If ball hits left rim (Side Collision - "thrown away")
-                if (Math.abs(ballCenterX - leftRimX) < 50 && Math.abs(currentY + ballSize - rimY) < 40) {
+                const isComingFromTop = velY > 0; // Ball is falling downward
+                const isCenteredInHoop = ballCenterX > hoopLeft && ballCenterX < hoopRight;
+                const isAtRimHeight = Math.abs(ballCenterY - rimY) < 60;
+
+                // SIDE COLLISION: Ball hits the left edge of the net
+                if (ballCenterX > leftRimX - 60 && ballCenterX < leftRimX + 20 && isAtRimHeight && !isCenteredInHoop) {
                     velY = -Math.abs(velY) * 0.7;
-                    velX = -Math.abs(velX + 8) * 1.6; // Forceful throw back
+                    velX = -Math.abs(velX + 8) * 1.6; // Push ball to the left
                     if (!hasDetectedEnd.current) {
                         playMiss();
                         hasDetectedEnd.current = true;
                     }
                 }
-                // If ball hits right rim (Side Collision - "thrown away")
-                if (Math.abs(ballCenterX - rightRimX) < 50 && Math.abs(currentY + ballSize - rimY) < 40) {
+                // SIDE COLLISION: Ball hits the right edge of the net
+                else if (ballCenterX > rightRimX - 20 && ballCenterX < rightRimX + 60 && isAtRimHeight && !isCenteredInHoop) {
                     velY = -Math.abs(velY) * 0.7;
-                    velX = Math.abs(velX + 8) * 1.6; // Forceful throw back
+                    velX = Math.abs(velX + 8) * 1.6; // Push ball to the right
                     if (!hasDetectedEnd.current) {
                         playMiss();
                         hasDetectedEnd.current = true;
                     }
                 }
 
-                // Swish Detection (Center area)
-                const withinX = ballCenterX > netX + 45 && ballCenterX < netX + netRect.width - 45;
-                const withinY = ballCenterY > netY - 50 && ballCenterY < netY + netRect.height;
+                // TOP ENTRY / SWISH: Ball is centered in the hoop and falling down
+                const withinNetX = ballCenterX > hoopLeft && ballCenterX < hoopRight;
+                const withinNetY = ballCenterY > hoopTop && ballCenterY < netY + netRect.height;
 
-                if (withinX && withinY) {
-                    ballZIndex.set(15);
-                    // Scale down slightly when inside the net
+                if (withinNetX && withinNetY && isComingFromTop) {
+                    ballZIndex.set(25); // Between back net (z-20) and front net (z-40)
                     scaleX.set(0.85);
                     scaleY.set(0.95);
 
-                    // Net resistance
-                    velX *= 0.96;
-                    velY *= 0.96;
+                    // Net resistance (slow the ball as it passes through)
+                    velX *= 0.92;
+                    velY *= 0.94;
 
-                    // Goal only if falling from top side (positive velY)
-                    if (velY > 1.5 && !isGoal && !hasDetectedEnd.current) {
+                    // Trigger goal if falling through cleanly
+                    if (velY > 1 && !isGoal && !hasDetectedEnd.current) {
                         hasDetectedEnd.current = true;
                         playCelebration();
                     }
                 } else {
-                    ballZIndex.set(50);
+                    ballZIndex.set(50); // Above everything
                     if (!isDragging.current) {
                         scaleX.set(1);
                         scaleY.set(1);

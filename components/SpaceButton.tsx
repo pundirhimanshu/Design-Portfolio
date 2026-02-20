@@ -25,15 +25,23 @@ const generateExplosions = (count: number) => {
     }));
 };
 
-export default function SpaceButton() {
+interface SpaceButtonProps {
+    href?: string;
+}
+
+export default function SpaceButton({ href }: SpaceButtonProps) {
     const stars = useMemo(() => generateRandomStars(20), []);
     const explosions = useMemo(() => generateExplosions(4), []);
 
+    const Component = href ? motion.a : motion.button;
+    const componentProps = href ? { href, target: "_blank", rel: "noopener noreferrer" } : {};
+
     return (
-        <motion.button
+        <Component
+            {...componentProps}
             whileHover="hover"
             whileTap={{ scale: 0.95 }}
-            className="relative overflow-hidden bg-black text-white px-8 py-4 rounded-full text-xl font-bold tracking-tight shadow-xl hover:shadow-red-500/30 transition-shadow group isolate w-full md:w-auto"
+            className="relative overflow-hidden bg-black text-white px-8 py-4 rounded-full text-xl font-bold tracking-tight shadow-xl hover:shadow-red-500/30 transition-shadow group isolate w-full md:w-auto inline-block text-center"
             style={{ transformStyle: 'preserve-3d' }}
         >
             {/* Intensity Shake Effect Container */}
@@ -183,6 +191,6 @@ export default function SpaceButton() {
                     <path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </motion.svg>
             </span>
-        </motion.button>
+        </Component>
     );
 }

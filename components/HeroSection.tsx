@@ -24,7 +24,7 @@ export default function HeroSection() {
             {/* Grid background - more visible */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:4rem_4rem]" />
 
-            {/* Basketball Net (Layered for "Inside" effect) - Hidden on Mobile */}
+            {/* Basketball Net BACK Layer - Ball renders IN FRONT of this */}
             <motion.div
                 ref={netRef}
                 animate={isNetWobbling ? {
@@ -33,36 +33,39 @@ export default function HeroSection() {
                     y: [0, 5, -2, 1, 0]
                 } : {}}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="absolute top-[20%] right-[2%] md:right-[5%] w-[180px] md:w-[280px] aspect-square hidden lg:block"
+                className="absolute top-[20%] right-[2%] md:right-[5%] w-[180px] md:w-[280px] aspect-square hidden lg:block z-20 opacity-80"
             >
-                {/* Back Layer of Net */}
-                <div className="absolute inset-0 z-10 opacity-80">
-                    <Image
-                        src="/images/Net.png"
-                        alt="Net Back"
-                        fill
-                        className="object-contain"
-                    />
-                </div>
-
-                {/* Front Layer of Net (Layered for "Inside" effect) */}
-                <div
-                    className="absolute inset-0 z-20 pointer-events-none"
-                    style={{ clipPath: 'inset(0 0 15% 0)' }} // Shows the top 85% (rim and most of the net)
-                >
-                    <Image
-                        src="/images/Net.png"
-                        alt="Net Front"
-                        fill
-                        className="object-contain"
-                    />
-                </div>
+                <Image
+                    src="/images/Net.png"
+                    alt="Net Back"
+                    fill
+                    className="object-contain"
+                />
             </motion.div>
 
-            {/* Basketball - Hidden on Mobile */}
-            <div className="hidden lg:block">
+            {/* Basketball - renders between the two net layers */}
+            <div className="hidden lg:block" style={{ zIndex: 30, position: 'relative' }}>
                 <Basketball containerRef={sectionRef} netRef={netRef} onSwish={handleSwish} />
             </div>
+
+            {/* Basketball Net FRONT Layer - Ball renders BEHIND this */}
+            <motion.div
+                animate={isNetWobbling ? {
+                    rotate: [-1, 2, -2, 1, 0],
+                    scale: [1, 1.05, 0.98, 1.02, 1],
+                    y: [0, 5, -2, 1, 0]
+                } : {}}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="absolute top-[20%] right-[2%] md:right-[5%] w-[180px] md:w-[280px] aspect-square hidden lg:block z-40 pointer-events-none"
+                style={{ clipPath: 'inset(0 0 40% 0)' }}
+            >
+                <Image
+                    src="/images/Net.png"
+                    alt="Net Front"
+                    fill
+                    className="object-contain"
+                />
+            </motion.div>
 
             {/* Main Content */}
             <div className="relative z-10 max-w-7xl mx-auto px-8 pt-32 md:pt-44 pb-32 flex flex-col items-center text-center">
