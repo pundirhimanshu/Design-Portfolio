@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import GameConsole from './GameConsole';
+
 
 const socialLinks = [
     { name: 'LinkedIn', url: 'https://www.linkedin.com/in/himanshu-pundir-8860ba198?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app' },
@@ -94,9 +94,9 @@ export default function Footer() {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+            <div className="relative z-10 max-w-7xl mx-auto w-full">
 
-                {/* Left Column - Text & Links */}
+                {/* Text & Links */}
                 <div className="flex flex-col gap-20">
                     {/* Top Section - Heading */}
                     <div className="max-w-xl">
@@ -109,7 +109,7 @@ export default function Footer() {
                     {/* Bottom Section - Links & Copyright */}
                     <div className="flex flex-col gap-12">
                         {/* Social Links Grid */}
-                        <div className="flex flex-col gap-8 max-w-2xl">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 max-w-2xl">
                             {socialLinks.map((link) => (
                                 <motion.a
                                     key={link.name}
@@ -134,11 +134,6 @@ export default function Footer() {
 
                         </div>
                     </div>
-                </div>
-
-                {/* Right Column - Interactive Gaming Console */}
-                <div className="relative w-full hidden lg:flex items-center justify-center lg:justify-end h-[420px]">
-                    <GameConsole />
                 </div>
             </div>
 
